@@ -1,15 +1,33 @@
 <template>
   <v-layout>
     <v-flex text-xs-center>
-      <img src="/v.png" alt="Vuetify.js" class="mb-5">
-      <blockquote class="blockquote">
-        &#8220;First, solve the problem. Then, write the code.&#8221;
-        <footer>
-          <small>
-            <em>&mdash;John Johnson</em>
-          </small>
-        </footer>
-      </blockquote>
+      <ul>
+        <li v-for="(todo, index) in todos" v-bind:key="index">
+          <input type="checkbox" :checked="todo.done" @change="toggle(todo)">
+          <span>{{ todo.text }}</span>
+        </li>
+        <li><input placeholder="What needs to be done?" @keyup.enter="addTodo"></li>
+      </ul>
     </v-flex>
   </v-layout>
 </template>
+
+<script>
+
+import { mapMutations } from 'vuex'
+
+export default {
+  computed: {
+    todos () { return this.$store.state.todos.list }
+  },
+  methods: {
+    addTodo (e) {
+      this.$store.commit('add', e.target.value)
+      e.target.value = ''
+    },
+    ...mapMutations({
+      toggle: 'toggle'
+    })
+  }
+}
+</script>
